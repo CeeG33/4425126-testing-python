@@ -1,0 +1,24 @@
+Classe Operators
+
+    Méthodes d'opérations :
+
+        - Symbol is a digit
+        - Symbol does not match to self.signe (operator)
+        - Symbol does not match to "."
+        - Symbol does not match to " "
+        - Conversion to float impossible
+        - Division with 0
+
+
+Classe View
+
+    Méthode print_result:
+        - Result is None
+
+
+Classe Controller:
+
+    Méthode _is_input_valid:
+        -Input invalid
+
+    
