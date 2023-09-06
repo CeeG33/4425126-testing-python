@@ -1,13 +1,19 @@
+import contextlib
+
+from io import StringIO
 from unittest import TestCase, main
+
 from calculate.view import View
-from _pytest.capture import capsys
-
-
 
 class TestView(TestCase):
-    def test_should_print_menu(self, capsys):
-        View.print_menu()
-        out, err = capsys.readouterr()
+    def setUp(self):
+        self.temp_stdout = StringIO()
+    
+    def test_should_print_menu(self):
+        with contextlib.redirect_stdout(self.temp_stdout):
+            View.print_menu()
+        
+        output = self.temp_stdout.getvalue()
         expected_output = (
             "\n=========== MENU ===========\n"
             "1 - Addition\n"
@@ -17,30 +23,36 @@ class TestView(TestCase):
             "5 - Quitter\n"
             "============================\n")
         
-        self.assertEqual(out.strip(), expected_output.strip())
+        self.assertEqual(output.strip(), expected_output.strip())
         
-    def test_should_print_end_message(self, capsys):
-        View.end_message()
-        out, err = capsys.readouterr()
+    def test_should_print_end_message(self):
+        with contextlib.redirect_stdout(self.temp_stdout):
+            View.end_message()
+        
+        output = self.temp_stdout.getvalue()
         expected_output = ("=========== GOOD-BYE ===========")
         
-        self.assertEqual(out.strip(), expected_output.strip())
+        self.assertEqual(output.strip(), expected_output.strip())
 
-    def test_should_print_result(self, capsys):
+    def test_should_print_result(self):
         operation = "2+2"
         result = 4
-        expected_output = f"RESULTAT : {operation} = {result}\n"
-        View.print_result(operation, result)
-        out, err = capsys.readouterr()
-        self.assertEqual(out.strip(), expected_output.strip())
+        with contextlib.redirect_stdout(self.temp_stdout):
+            View.print_result(operation, result)
         
-    def test_should_print_result_error(self, capsys):
+        output = self.temp_stdout.getvalue()
+        expected_output = f"RESULTAT : {operation} = {result}\n"
+        self.assertEqual(output.strip(), expected_output.strip())
+        
+    def test_should_print_result_error(self):
         operation = "2+3"
         result = None
-        View.print_result(operation, result)
-        out, err = capsys.readouterr()
+        with contextlib.redirect_stdout(self.temp_stdout):
+            View.print_result(operation, result)
+            
+        output = self.temp_stdout.getvalue()
         expected_output = (f"Votre operation est incorrect ! : {operation}\n")
-        self.assertEqual(out.strip(), expected_output.strip())
+        self.assertEqual(output.strip(), expected_output.strip())
 
 
 if __name__ == "__main__":
